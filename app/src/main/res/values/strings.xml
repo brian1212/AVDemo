@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Anh-Việt</string>
+    <string name="vinova_company_mail"><u>info@vinova.sg</u></string>
+    <string name="mail">Mail: </string>
+    <string name="action_settings">Settings</string>
+    <string name="lbl_website"><u>vinova.sg</u></string>
+    <string name="website">Website:</string>
+    <string name="lbl_topic">Các chủ đề</string>
+    <string name="lbl_favorite">Câu ưa thích</string>
+    <string name="lbl_emtpy">Danh mục trống.</string>
+    <string name="lbl_search">Tìm kiếm</string>
+    <string name="lbl_owner">Vinova Pte Ltd Singapore</string>
+    <string name="lbl_remove_from_favorite">Removed from Favorites</string>
+    <string name="lbl_saved_to_favorite">Saved to Favorites</string>
+    <string name="lbl_press_one_more_time_to_exit">Bấm lần nữa để thoát ứng dụng.</string>
+
+    <string name="btn_rating">Đánh giá</string>
+    <string name="btn_clear">Clear</string>
+
+    <string name="banner_ad_unit_id">ca-app-pub-1845622931012262/4729012237</string>
+</resources>

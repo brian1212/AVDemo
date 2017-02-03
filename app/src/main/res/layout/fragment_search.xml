@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@color/colorPrimaryDark"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_label_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_size"
+        android:layout_marginLeft="3dp"
+        android:textColor="@color/yellow"/>
+
+    <android.support.v7.widget.SearchView
+        android:id="@+id/search_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/btn_search"
+        android:background="@drawable/round_search"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:layout_below="@+id/tv_label_search"/>
+
+    <Button
+        android:id="@+id/btn_search"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_label_search"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/round_button"
+        android:layout_marginRight="3dp"
+        android:textColor="@color/blue"
+        android:text="@string/btn_clear"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyler_view_search"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/btn_search"/>
+
+
+</RelativeLayout>

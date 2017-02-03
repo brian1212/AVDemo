@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:background="@color/colorPrimaryDark"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_label_cat"
+        android:layout_width="wrap_content"
+        android:textColor="@color/yellow"
+        android:layout_marginLeft="3dp"
+        android:textSize="@dimen/text_size"
+        android:layout_height="wrap_content" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_below="@+id/tv_label_cat"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/tv_label_cat"
+        android:background="@color/colorPrimaryDark"
+        android:layout_marginLeft="43dp"
+        android:visibility="invisible"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/darker_gray"/>
+
+            <ImageView
+                android:id="@+id/imv_previous"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_action_previous_item"/>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_label_child"
+                    android:textColor="@color/yellow"
+                    android:layout_width="wrap_content"
+                    android:textSize="@dimen/text_child_size"
+                    android:layout_height="wrap_content" />
+
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/child_recycler_view"
+                    android:gravity="right"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+
+    </android.support.v4.widget.DrawerLayout>
+
+
+</RelativeLayout>
