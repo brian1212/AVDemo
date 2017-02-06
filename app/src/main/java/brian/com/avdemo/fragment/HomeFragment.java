@@ -52,7 +52,6 @@ public class HomeFragment extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
-//        getRealm().deleteAllItem();
         if (getRealm().fetchAllItem().size() == 0) {
             getAllItem();
         }

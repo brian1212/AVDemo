@@ -81,7 +81,6 @@ public class SearchFragment extends BaseFragment {
                 return true;
             }
         });
-
     }
 
     @Override

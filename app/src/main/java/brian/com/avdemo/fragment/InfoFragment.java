@@ -7,34 +7,25 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import brian.com.avdemo.ApiService;
 import brian.com.avdemo.R;
+import brian.com.avdemo.RetroClient;
 import brian.com.avdemo.adapter.TvAdapter;
+import brian.com.avdemo.model.AppsList;
 import brian.com.avdemo.model.TvModel;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 
 public class InfoFragment extends BaseFragment {
@@ -54,37 +45,58 @@ public class InfoFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_info, container, false);
         ButterKnife.bind(this, v);
-//        getRealm().deleteAllTv();
 
-        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-        JsonObjectRequest obreq = new JsonObjectRequest(Request.Method.GET, URL,
-                new Response.Listener<JSONObject>() {
-                    // Takes the response from the JSON request
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            JSONArray array = response.getJSONArray("apps");
-                            Gson gson = new Gson();
-                            mItemList = Arrays.asList(gson.fromJson(array.toString(), TvModel[].class));
-                            if (getRealm().fetchAllTv().size() == 0) {
-                                for (TvModel model : mItemList) {
-                                    getRealm().insertTv(model);
-                                }
-                            }
-                            fillData();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("Volley", "Error");
+//        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+//        JsonObjectRequest obreq = new JsonObjectRequest(Request.Method.GET, URL,
+//                new Response.Listener<JSONObject>() {
+//                    // Takes the response from the JSON request
+//                    @Override
+//                    public void onResponse(JSONObject response) {
+//                        try {
+//                            JSONArray array = response.getJSONArray("apps");
+//                            Gson gson = new Gson();
+//                            mItemList = Arrays.asList(gson.fromJson(array.toString(), TvModel[].class));
+//                            if (getRealm().fetchAllTv().size() == 0) {
+//                                for (TvModel model : mItemList) {
+//                                    getRealm().insertTv(model);
+//                                }
+//                            }
+//                            fillData();
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                },
+//                new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        Log.e("Volley", "Error");
+//                    }
+//                }
+//        );
+//        requestQueue.add(obreq);
+        getRealm().deleteAllTv();
+
+        //Creating an object of our api interface
+        ApiService api = RetroClient.getApiService();
+        Call<AppsList> call = api.getMyJSON();
+        call.enqueue(new Callback<AppsList>() {
+            @Override
+            public void onResponse(Call<AppsList> call, retrofit2.Response<AppsList> response) {
+            mItemList =    response.body().getApps();
+                if (getRealm().fetchAllTv().size() == 0) {
+                    for (TvModel model : mItemList) {
+                        getRealm().insertTv(model);
                     }
                 }
-        );
-        requestQueue.add(obreq);
+                fillData();
+            }
+
+            @Override
+            public void onFailure(Call<AppsList> call, Throwable t) {
+
+            }
+        });
         return v;
     }
 
