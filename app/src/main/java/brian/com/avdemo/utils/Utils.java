@@ -8,8 +8,10 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import brian.com.avdemo.model.ItemModel;
 
@@ -120,5 +122,37 @@ public class Utils {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static boolean filter(String search, String text) {
+        List<String> tokensText = new ArrayList<>();
+        List<String> tokensSearch = new ArrayList<>();
+
+        String newText = text.substring(0, text.length() - 1);
+        StringTokenizer stText = new StringTokenizer(newText);
+        //("---- Split by space ------");
+        while (stText.hasMoreElements()) {
+            tokensText.add(stText.nextElement().toString());
+        }
+
+        StringTokenizer stSearch = new StringTokenizer(search);
+        //("---- Split by space ------");
+        while (stSearch.hasMoreElements()) {
+            tokensSearch.add(stSearch.nextElement().toString());
+        }
+
+        if (tokensSearch.size() < 2) {
+            for (int i = 0; i < tokensText.size(); i++) {
+                if (tokensText.get(i).equals(search)) {
+                    return true;
+                }
+            }
+        } else {
+            if (newText.contains(search)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

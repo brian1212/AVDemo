@@ -52,8 +52,20 @@ public class HomeFragment extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+        //load all data in first time
         if (getRealm().fetchAllItem().size() == 0) {
-            getAllItem();
+            List<ItemModel> mCatList = Utils.loadJSONFromAsset(getContext(), "category", "category");
+            for (ItemModel item : mCatList) {
+                getRealm().insertItem(item);
+            }
+            for (int i = 1; i <= mCatList.size(); i++) {
+                List<ItemModel> mChildList = Utils.loadJSONFromAsset(getContext(), "jsons", String.valueOf(i));
+                if (mChildList != null && mChildList.size() != 0) {
+                    for (ItemModel item : mChildList) {
+                        getRealm().insertItem(item);
+                    }
+                }
+            }
         }
 
     }
@@ -74,7 +86,7 @@ public class HomeFragment extends BaseFragment {
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mChildRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-//        itemAdapter = new ItemAdapter(getContext(), getCatList());
+
         itemAdapter = new ItemAdapter(getContext(), getRealm().fetchAllItemByCat(null));
         mRecyclerView.setAdapter(itemAdapter);
 

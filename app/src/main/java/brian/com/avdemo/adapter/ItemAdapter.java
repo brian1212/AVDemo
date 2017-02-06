@@ -7,22 +7,26 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import brian.com.avdemo.R;
 import brian.com.avdemo.model.ItemModel;
 import brian.com.avdemo.realm.RealmHelper;
+import brian.com.avdemo.utils.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 
-public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
+public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> implements Filterable {
     OnItemClickListener itemClickListener;
     RealmHelper mRealmHelper = new RealmHelper();
     private Context mContext;
@@ -40,23 +44,19 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             R.drawable.topic_51, R.drawable.topic_52, R.drawable.topic_53, R.drawable.topic_54, R.drawable.topic_55,
             R.drawable.topic_56, R.drawable.topic_57, R.drawable.topic_58, R.drawable.topic_59, R.drawable.topic_60};
 
+
     public ItemAdapter(Context mContext, List<ItemModel> mCatList) {
         this.mContext = mContext;
         //mCatlist truyen vao lay tu Realm nen minh copy ra 1 ban de lam
 //        this.mCatList = Realm.getDefaultInstance().copyFromRealm(mCatList);
         this.mCatList = mCatList;
+        //set false all item isClicked
         for (ItemModel itemModel : mCatList) {
             if (mRealmHelper.getItemById(itemModel.getId()).isClicked()) {
                 mRealmHelper.isClicked(itemModel.getId(), false);
             }
         }
-
     }
-
-//    public void updateAdapter(List<ItemModel> mCatList) {
-//        this.mCatList = Realm.getDefaultInstance().
-//        this.mCatList = mCatList;
-//    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -78,6 +78,39 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         this.itemClickListener = itemClickListener;
     }
 
+    @Override
+    public Filter getFilter() {
+        Filter filter = new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                FilterResults filterResults = new FilterResults();
+                if (charSequence == null || charSequence.length() == 0) {
+                    //no search, so just return all the data
+                    filterResults.count = mCatList.size();
+                    filterResults.values = mCatList;
+                } else {
+                    List<ItemModel> resultData = new ArrayList<>();
+                    for (ItemModel item : mCatList) {
+                        if (Utils.filter(charSequence.toString().toLowerCase(), item.getEnglish().toLowerCase()) ||
+                                Utils.filter(charSequence.toString().toLowerCase(), Utils.convertString(item.getVietnam().toLowerCase()))) {
+                            resultData.add(item);
+                        }
+                    }
+                    filterResults.count = resultData.size();
+                    filterResults.values = resultData;
+                }
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                mCatList = (List<ItemModel>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
+        return filter;
+    }
+
     public interface OnItemClickListener {
         void OnClick(ItemModel catModel);
     }
@@ -95,22 +128,10 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         @Bind(R.id.card_view)
         RelativeLayout cardView;
 
-//        RealmHelper mRealmHelper;
-
 
         public ViewHolder(final View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-//            mRealmHelper = new RealmHelper();
-
-//            for (int i = 0; i < mRealmHelper.fetchAllItemClicked().size(); i++) {
-//                mRealmHelper.isClicked(mRealmHelper.fetchAllItemClicked().get(i).getId(), false);
-//            }
-//            for (ItemModel itemModel : mCatList) {
-//                if(mRealmHelper.getItemById(itemModel.getId()).isClicked()){
-//                    mRealmHelper.isClicked(itemModel.getId(),false);
-//                }
-//            }
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -119,26 +140,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
                     if (itemClickListener != null) {
                         itemClickListener.OnClick(mCatList.get(pos));
                     }
-
-
-//                    for (ItemModel model : mCatList) {
-//                        model.setClicked(false);
-//                    }
-//                    mCatList.get(pos).setClicked(true);
-
-//                    if (mRealmHelper.fetchAllItemClicked().size() != 0) {
-//                        for (int i = 0; i < mCatList.size(); i++) {
-//                            if (mCatList.get(i).getId() == mRealmHelper.fetchAllItemClicked().get(0).getId()) {
-//                                mRealmHelper.isClicked(mCatList.get(i).getId(), false);
-//                                break;
-//                            }
-//                        }
-//                    }
-//                    for (ItemModel itemModel : mCatList) {
-//                        if(mRealmHelper.getItemById(itemModel.getId()).isClicked()){
-//                            mRealmHelper.isClicked(itemModel.getId(),false);
-//                        }
-//                    }
 
                     for (int i = 0; i < mRealmHelper.fetchAllItemClicked().size(); i++) {
                         mRealmHelper.isClicked(mRealmHelper.fetchAllItemClicked().get(i).getId(), false);

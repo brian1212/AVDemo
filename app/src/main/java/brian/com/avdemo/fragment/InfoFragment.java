@@ -37,6 +37,9 @@ public class InfoFragment extends BaseFragment {
     List<TvModel> mItemList = new ArrayList<>();
     TvAdapter adapter;
 
+        //use volley
+//    public static final String URL = "http://vinova.sg/mobile-apps/tuvi.json";
+
     public InfoFragment() {
     }
 
@@ -75,7 +78,6 @@ public class InfoFragment extends BaseFragment {
 //                }
 //        );
 //        requestQueue.add(obreq);
-        getRealm().deleteAllTv();
 
         //Creating an object of our api interface
         ApiService api = RetroClient.getApiService();

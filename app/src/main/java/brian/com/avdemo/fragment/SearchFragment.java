@@ -68,9 +68,9 @@ public class SearchFragment extends BaseFragment {
             @Override
             public boolean onQueryTextChange(String newText) {
 
-                itemAdapter = new ItemAdapter(getContext(), search(newText));
+                itemAdapter = new ItemAdapter(getContext(),getRealm().fetchAllChildItem());
+                itemAdapter.getFilter().filter(newText);
 
-//                itemAdapter.notifyDataSetChanged();
                 mRecyclerView.setAdapter(itemAdapter);
                 itemAdapter.setOnItemClickListener(new ItemAdapter.OnItemClickListener() {
                     @Override
@@ -96,8 +96,8 @@ public class SearchFragment extends BaseFragment {
     }
 
     @Subscribe
-    public void onEvent(String event){
-        if(event.equals("remove")){
+    public void onEvent(String event) {
+        if (event.equals("remove")) {
             itemAdapter.notifyDataSetChanged();
         }
     }
@@ -105,87 +105,6 @@ public class SearchFragment extends BaseFragment {
     @OnClick(R.id.btn_search)
     public void onClickClear() {
         txtSearch.setText("");
-//        itemAdapter.updateAdapter(search(""));
-//        mRecyclerView.setAdapter(itemAdapter);
     }
-
-    public boolean filter(String search, String text) {
-        List<String> tokensText = new ArrayList<>();
-        List<String> tokensSearch = new ArrayList<>();
-
-        String newText = text.substring(0, text.length() - 1);
-        StringTokenizer stText = new StringTokenizer(newText);
-        //("---- Split by space ------");
-        while (stText.hasMoreElements()) {
-            tokensText.add(stText.nextElement().toString());
-        }
-
-        StringTokenizer stSearch = new StringTokenizer(search);
-        //("---- Split by space ------");
-        while (stSearch.hasMoreElements()) {
-            tokensSearch.add(stSearch.nextElement().toString());
-        }
-
-        if (tokensSearch.size() < 2) {
-            for (int i = 0; i < tokensText.size(); i++) {
-                if (tokensText.get(i).equals(search)) {
-                    return true;
-                }
-            }
-        } else {
-            if(newText.contains(search)){
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public List<ItemModel> search(String keyWord) {
-//        List<String> tokens = new ArrayList<>();
-//        StringTokenizer st = new StringTokenizer(keyWord);
-//        while (st.hasMoreElements()) {
-//            tokens.add(st.nextElement().toString());
-//        }
-
-        List<ItemModel> mListItem = new ArrayList<>();
-
-        for (ItemModel item : getRealm().fetchAllChildItem()) {
-//            if (tokens.size() < 2) {
-            if (filter(keyWord.toLowerCase(), item.getEnglish().toLowerCase()) ||
-                    filter(keyWord.toLowerCase(), Utils.convertString(item.getVietnam().toLowerCase()))) {
-//                if (!filterSearch(mListItem, item)) {
-                    mListItem.add(item);
-//                }
-            }
-//            } else {
-
-
-//                for (String s : tokens) {
-//                    if (filter(s.toLowerCase(), item.getEnglish().toLowerCase()) ||
-//                            filter(s.toLowerCase(), Utils.convertString(item.getVietnam().toLowerCase()))) {
-//                        if (!filterSearch(mListItem, item)) {
-//                            mListItem.add(item);
-//                        }
-//                    }
-//                }
-//            }
-        }
-//        for (ItemModel itemModel : mListItem) {
-//            if(getRealm().getItemById(itemModel.getId()).isClicked()){
-//                getRealm().isClicked(itemModel.getId(),false);
-//            }
-//        }
-        return mListItem;
-    }
-
-//    public boolean filterSearch(List<ItemModel> list, ItemModel item) {
-//        for (int i = 0; i < list.size(); i++) {
-//            if (list.get(i).getId() == item.getId()) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
 
 }
