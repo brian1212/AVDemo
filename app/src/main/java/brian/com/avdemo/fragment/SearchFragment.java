@@ -9,6 +9,7 @@ import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -56,8 +57,9 @@ public class SearchFragment extends BaseFragment {
         tvSearch.setText(R.string.lbl_search);
         txtSearch = ((TextView) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text));
         txtSearch.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
-
+        itemAdapter = new ItemAdapter(getContext(),getRealm().fetchAllChildItem());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+
         searchView.onActionViewExpanded();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -68,7 +70,7 @@ public class SearchFragment extends BaseFragment {
             @Override
             public boolean onQueryTextChange(String newText) {
 
-                itemAdapter = new ItemAdapter(getContext(),getRealm().fetchAllChildItem());
+
                 itemAdapter.getFilter().filter(newText);
 
                 mRecyclerView.setAdapter(itemAdapter);

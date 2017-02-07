@@ -83,11 +83,11 @@ public class TvAdapter extends RecyclerView.Adapter<TvAdapter.ViewHolder>  {
         public void bind(int position) {
             tvItem.setText(mListTv.get(position).getName());
             if(position == 12){
-                String url = mListTv.get(position).getThumbnail_url();
+                String url = mListTv.get(position).getThumbnailUrl();
                 String newUrl = url.substring(1);
                 Picasso.with(mContext).load(newUrl).transform(new RoundedCornersTransform()).into(imvItem);
             }else {
-                Picasso.with(mContext).load(mListTv.get(position).getThumbnail_url()).transform(new RoundedCornersTransform()).into(imvItem);
+                Picasso.with(mContext).load(mListTv.get(position).getThumbnailUrl()).transform(new RoundedCornersTransform()).into(imvItem);
             }
         }
     }

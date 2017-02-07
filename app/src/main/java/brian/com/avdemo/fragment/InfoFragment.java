@@ -35,9 +35,9 @@ public class InfoFragment extends BaseFragment {
     @Bind(R.id.recycler_view_info)
     RecyclerView mRecyclerView;
     List<TvModel> mItemList = new ArrayList<>();
-    TvAdapter adapter;
+    private TvAdapter adapter;
 
-        //use volley
+    //use volley
 //    public static final String URL = "http://vinova.sg/mobile-apps/tuvi.json";
 
     public InfoFragment() {
@@ -48,7 +48,6 @@ public class InfoFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_info, container, false);
         ButterKnife.bind(this, v);
-
 //        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 //        JsonObjectRequest obreq = new JsonObjectRequest(Request.Method.GET, URL,
 //                new Response.Listener<JSONObject>() {
@@ -85,7 +84,7 @@ public class InfoFragment extends BaseFragment {
         call.enqueue(new Callback<AppsList>() {
             @Override
             public void onResponse(Call<AppsList> call, retrofit2.Response<AppsList> response) {
-            mItemList =    response.body().getApps();
+                mItemList = response.body().getApps();
                 if (getRealm().fetchAllTv().size() == 0) {
                     for (TvModel model : mItemList) {
                         getRealm().insertTv(model);
@@ -116,12 +115,12 @@ public class InfoFragment extends BaseFragment {
         adapter.setOnTvModelClickListener(new TvAdapter.OnItemClickListener() {
             @Override
             public void OnClick(TvModel model) {
-                if (!TextUtils.isEmpty(model.getPlay_store_url())) {
-                    Uri uri = Uri.parse(model.getPlay_store_url());
+                if (!TextUtils.isEmpty(model.getPlayStoreUrl())) {
+                    Uri uri = Uri.parse(model.getPlayStoreUrl());
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     startActivity(intent);
                 } else {
-                    Uri uri = Uri.parse(model.getApp_store_url());
+                    Uri uri = Uri.parse(model.getAppStoreUrl());
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     startActivity(intent);
                 }

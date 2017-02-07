@@ -9,7 +9,7 @@ public class ItemModel extends RealmObject {
     @SerializedName("id")
     private int id;
     @SerializedName("cat_id")
-    private String cat_id;
+    private String catId;
     @SerializedName("e")
     private String english;
     @SerializedName("v")
@@ -44,12 +44,12 @@ public class ItemModel extends RealmObject {
         this.id = id;
     }
 
-    public String getCat_id() {
-        return cat_id;
+    public String getCatId() {
+        return catId;
     }
 
-    public void setCat_id(String cat_id) {
-        this.cat_id = cat_id;
+    public void setCatId(String catId) {
+        this.catId = catId;
     }
 
     public String getEnglish() {

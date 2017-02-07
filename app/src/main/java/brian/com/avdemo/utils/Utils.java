@@ -128,7 +128,8 @@ public class Utils {
         List<String> tokensText = new ArrayList<>();
         List<String> tokensSearch = new ArrayList<>();
 
-        String newText = text.substring(0, text.length() - 1);
+        //remove sign
+        String newText = text.replace(",","").replace("?","").replace(".","").replace("!","");
         StringTokenizer stText = new StringTokenizer(newText);
         //("---- Split by space ------");
         while (stText.hasMoreElements()) {

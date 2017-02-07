@@ -22,7 +22,7 @@ public class RealmHelper {
             public void execute(Realm realm) {
                 ItemModel itemModel = realm.createObject(ItemModel.class);
                 itemModel.setId(item.getId());
-                itemModel.setCat_id(item.getCat_id());
+                itemModel.setCatId(item.getCatId());
                 itemModel.setEnglish(item.getEnglish());
                 itemModel.setVietnam(item.getVietnam());
             }
@@ -35,9 +35,9 @@ public class RealmHelper {
             public void execute(Realm realm) {
                 TvModel tvModel = realm.createObject(TvModel.class);
                 tvModel.setName(model.getName());
-                tvModel.setThumbnail_url(model.getThumbnail_url());
-                tvModel.setApp_store_url(model.getApp_store_url());
-                tvModel.setPlay_store_url(model.getPlay_store_url());
+                tvModel.setThumbnailUrl(model.getThumbnailUrl());
+                tvModel.setAppStoreUrl(model.getAppStoreUrl());
+                tvModel.setPlayStoreUrl(model.getPlayStoreUrl());
             }
         });
     }
@@ -58,7 +58,7 @@ public class RealmHelper {
     }
 
     public List<ItemModel> fetchAllChildItem() {
-        List<ItemModel> results = mRealm.copyFromRealm(mRealm.where(ItemModel.class).isNotNull("cat_id").findAll());
+        List<ItemModel> results = mRealm.copyFromRealm(mRealm.where(ItemModel.class).isNotNull("catId").findAll());
         return results;
     }
 
@@ -68,7 +68,7 @@ public class RealmHelper {
     }
 
     public List<ItemModel> fetchAllItemByCat(String id) {
-        List<ItemModel> results = mRealm.copyFromRealm(mRealm.where(ItemModel.class).equalTo("cat_id", id, Case.INSENSITIVE).findAll());
+        List<ItemModel> results = mRealm.copyFromRealm(mRealm.where(ItemModel.class).equalTo("catId", id, Case.INSENSITIVE).findAll());
         return results;
     }
 
@@ -106,15 +106,15 @@ public class RealmHelper {
 //        }
 //    }
 
-//    public void deleteAllItem() {
-//        mRealm.executeTransaction(new Realm.Transaction() {
-//            @Override
-//            public void execute(Realm realm) {
-//                RealmResults<ItemModel> results = mRealm.where(ItemModel.class).findAll();
-//                results.deleteAllFromRealm();
-//            }
-//        });
-//    }
+    public void deleteAllItem() {
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                RealmResults<ItemModel> results = mRealm.where(ItemModel.class).findAll();
+                results.deleteAllFromRealm();
+            }
+        });
+    }
 
 //    public void deleteItemById(final int id) {
 //        mRealm.executeTransaction(new Realm.Transaction() {

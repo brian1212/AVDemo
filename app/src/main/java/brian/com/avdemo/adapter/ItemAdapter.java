@@ -30,7 +30,9 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> im
     OnItemClickListener itemClickListener;
     RealmHelper mRealmHelper = new RealmHelper();
     private Context mContext;
-    private List<ItemModel> mCatList;
+    private List<ItemModel> mItemModelList;
+    private List<ItemModel> mFilterList;
+
     private int[] resouseId = {R.drawable.topic_1, R.drawable.topic_2, R.drawable.topic_3, R.drawable.topic_4, R.drawable.topic_5,
             R.drawable.topic_6, R.drawable.topic_7, R.drawable.topic_8, R.drawable.topic_9, R.drawable.topic_10,
             R.drawable.topic_11, R.drawable.topic_12, R.drawable.topic_13, R.drawable.topic_14, R.drawable.topic_15,
@@ -44,14 +46,12 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> im
             R.drawable.topic_51, R.drawable.topic_52, R.drawable.topic_53, R.drawable.topic_54, R.drawable.topic_55,
             R.drawable.topic_56, R.drawable.topic_57, R.drawable.topic_58, R.drawable.topic_59, R.drawable.topic_60};
 
-
-    public ItemAdapter(Context mContext, List<ItemModel> mCatList) {
+    public ItemAdapter(Context mContext, List<ItemModel> mItemModelList) {
         this.mContext = mContext;
-        //mCatlist truyen vao lay tu Realm nen minh copy ra 1 ban de lam
-//        this.mCatList = Realm.getDefaultInstance().copyFromRealm(mCatList);
-        this.mCatList = mCatList;
+        this.mItemModelList = mItemModelList;
+        this.mFilterList = mItemModelList;
         //set false all item isClicked
-        for (ItemModel itemModel : mCatList) {
+        for (ItemModel itemModel : mItemModelList) {
             if (mRealmHelper.getItemById(itemModel.getId()).isClicked()) {
                 mRealmHelper.isClicked(itemModel.getId(), false);
             }
@@ -71,7 +71,11 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> im
 
     @Override
     public int getItemCount() {
-        return mCatList.size();
+        if (mItemModelList == null) {
+            return 0;
+        } else {
+            return mItemModelList.size();
+        }
     }
 
     public void setOnItemClickListener(OnItemClickListener itemClickListener) {
@@ -86,11 +90,12 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> im
                 FilterResults filterResults = new FilterResults();
                 if (charSequence == null || charSequence.length() == 0) {
                     //no search, so just return all the data
-                    filterResults.count = mCatList.size();
-                    filterResults.values = mCatList;
+                    filterResults.count = mFilterList.size();
+                    filterResults.values = mFilterList;
                 } else {
                     List<ItemModel> resultData = new ArrayList<>();
-                    for (ItemModel item : mCatList) {
+                    //search in mFilterList
+                    for (ItemModel item : mFilterList) {
                         if (Utils.filter(charSequence.toString().toLowerCase(), item.getEnglish().toLowerCase()) ||
                                 Utils.filter(charSequence.toString().toLowerCase(), Utils.convertString(item.getVietnam().toLowerCase()))) {
                             resultData.add(item);
@@ -104,7 +109,13 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> im
 
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                mCatList = (List<ItemModel>) filterResults.values;
+                //mItemModelList: show up list
+                mItemModelList = (List<ItemModel>) filterResults.values;
+                for (ItemModel itemModel : mItemModelList) {
+                    if (mRealmHelper.getItemById(itemModel.getId()).isClicked()) {
+                        mRealmHelper.isClicked(itemModel.getId(), false);
+                    }
+                }
                 notifyDataSetChanged();
             }
         };
@@ -138,13 +149,13 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> im
                 public void onClick(View view) {
                     final int pos = getAdapterPosition();
                     if (itemClickListener != null) {
-                        itemClickListener.OnClick(mCatList.get(pos));
+                        itemClickListener.OnClick(mItemModelList.get(pos));
                     }
 
                     for (int i = 0; i < mRealmHelper.fetchAllItemClicked().size(); i++) {
                         mRealmHelper.isClicked(mRealmHelper.fetchAllItemClicked().get(i).getId(), false);
                     }
-                    mRealmHelper.isClicked(mCatList.get(pos).getId(), true);
+                    mRealmHelper.isClicked(mItemModelList.get(pos).getId(), true);
 
                     notifyDataSetChanged();
                 }
@@ -153,15 +164,15 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> im
             btnFavorite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (!mRealmHelper.getItemById(mCatList.get(getAdapterPosition()).getId()).isChecked()) {
-                        mRealmHelper.isChecked(mCatList.get(getAdapterPosition()).getId(), true);
+                    if (!mRealmHelper.getItemById(mItemModelList.get(getAdapterPosition()).getId()).isChecked()) {
+                        mRealmHelper.isChecked(mItemModelList.get(getAdapterPosition()).getId(), true);
                         btnFavorite.setImageResource(R.drawable.remove_selector);
-                        if (mRealmHelper.getItemById(mCatList.get(getAdapterPosition()).getId()).isClicked()) {
-                            mRealmHelper.isClicked(mCatList.get(getAdapterPosition()).getId(), false);
+                        if (mRealmHelper.getItemById(mItemModelList.get(getAdapterPosition()).getId()).isClicked()) {
+                            mRealmHelper.isClicked(mItemModelList.get(getAdapterPosition()).getId(), false);
                         }
                         EventBus.getDefault().post("add");
                     } else {
-                        mRealmHelper.isChecked(mCatList.get(getAdapterPosition()).getId(), false);
+                        mRealmHelper.isChecked(mItemModelList.get(getAdapterPosition()).getId(), false);
                         btnFavorite.setImageResource(R.drawable.button_selector);
                         EventBus.getDefault().post("remove");
 //                        notifyDataSetChanged();
@@ -171,22 +182,22 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> im
         }
 
         public void bind(int position) {
-            if (TextUtils.isEmpty(mCatList.get(position).getCat_id())) {
+            if (TextUtils.isEmpty(mItemModelList.get(position).getCatId())) {
                 imv.setImageResource(resouseId[position]);
-                tvEng.setText(mCatList.get(position).getEnglish());
-                tvVie.setText(mCatList.get(position).getVietnam());
+                tvEng.setText(mItemModelList.get(position).getEnglish());
+                tvVie.setText(mItemModelList.get(position).getVietnam());
             } else {
-                if (mRealmHelper.getItemById(mCatList.get(position).getId()).isChecked()) {
+                if (mRealmHelper.getItemById(mItemModelList.get(position).getId()).isChecked()) {
                     btnFavorite.setImageResource(R.drawable.remove_selector);
                 } else {
                     btnFavorite.setImageResource(R.drawable.button_selector);
                 }
                 btnFavorite.setVisibility(View.VISIBLE);
-                tvEng.setText(mCatList.get(position).getVietnam());
-                tvVie.setText(mCatList.get(position).getEnglish());
+                tvEng.setText(mItemModelList.get(position).getVietnam());
+                tvVie.setText(mItemModelList.get(position).getEnglish());
             }
 
-            if (mRealmHelper.getItemById(mCatList.get(position).getId()).isClicked()) {
+            if (mRealmHelper.getItemById(mItemModelList.get(position).getId()).isClicked()) {
                 cardView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.blue));
             } else {
                 cardView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorPrimaryDark));
