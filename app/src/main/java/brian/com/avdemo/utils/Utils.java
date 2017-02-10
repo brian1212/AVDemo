@@ -17,6 +17,7 @@ import brian.com.avdemo.model.ItemModel;
 
 public class Utils {
 
+    static MediaPlayer   player=null;
     private static char[] charA = { 'à', 'á', 'ạ', 'ả', 'ã',
             'â', 'ầ', 'ấ', 'ậ', 'ẩ', 'ẫ', 'ă', 'ằ', 'ắ', 'ặ', 'ẳ', 'ẵ' };
     private static char[] charE = { 'ê', 'ề', 'ế', 'ệ', 'ể', 'ễ',
@@ -114,10 +115,17 @@ public class Utils {
     public static void playSound(Context mContext, int soundNum) {
         String path = "audios/" + (soundNum - 100) + ".mp3";
         try {
+            if (player!=null&&player.isPlaying()) {
+                player.stop();
+                player.release();
+            }
             AssetFileDescriptor afd = mContext.getAssets().openFd(path);
-            MediaPlayer player = new MediaPlayer();
+            player = new  MediaPlayer();
             player.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+            afd.close();
+
             player.prepare();
+            player.setVolume(100, 100);
             player.start();
         } catch (IOException e) {
             e.printStackTrace();
@@ -129,7 +137,8 @@ public class Utils {
         List<String> tokensSearch = new ArrayList<>();
 
         //remove sign
-        String newText = text.replace(",","").replace("?","").replace(".","").replace("!","");
+        String newText = text.replace(",","").replace("?","").replace(".","").replace("!","").replace("'","").replace("’","");
+        String newSearch = search.replace(",","").replace("?","").replace(".","").replace("!","").replace(" ","").replace("'","");
         StringTokenizer stText = new StringTokenizer(newText);
         //("---- Split by space ------");
         while (stText.hasMoreElements()) {
@@ -144,7 +153,7 @@ public class Utils {
 
         if (tokensSearch.size() < 2) {
             for (int i = 0; i < tokensText.size(); i++) {
-                if (tokensText.get(i).equals(search)) {
+                if (tokensText.get(i).equals(newSearch)) {
                     return true;
                 }
             }

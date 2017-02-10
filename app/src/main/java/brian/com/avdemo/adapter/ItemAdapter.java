@@ -90,8 +90,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> im
                 FilterResults filterResults = new FilterResults();
                 if (charSequence == null || charSequence.length() == 0) {
                     //no search, so just return all the data
-                    filterResults.count = mFilterList.size();
-                    filterResults.values = mFilterList;
+                    filterResults.count = 0;
+                    filterResults.values = null;
                 } else {
                     List<ItemModel> resultData = new ArrayList<>();
                     //search in mFilterList
@@ -111,9 +111,11 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> im
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                 //mItemModelList: show up list
                 mItemModelList = (List<ItemModel>) filterResults.values;
-                for (ItemModel itemModel : mItemModelList) {
-                    if (mRealmHelper.getItemById(itemModel.getId()).isClicked()) {
-                        mRealmHelper.isClicked(itemModel.getId(), false);
+                if(mItemModelList != null){
+                    for (ItemModel itemModel : mItemModelList) {
+                        if (mRealmHelper.getItemById(itemModel.getId()).isClicked()) {
+                            mRealmHelper.isClicked(itemModel.getId(), false);
+                        }
                     }
                 }
                 notifyDataSetChanged();
@@ -135,7 +137,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> im
         @Bind(R.id.tv_vietnam)
         TextView tvVie;
         @Bind(R.id.imv_favorite)
-        ImageView btnFavorite;
+        ImageView imvFavorite;
         @Bind(R.id.card_view)
         RelativeLayout cardView;
 
@@ -161,19 +163,19 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> im
                 }
             });
 
-            btnFavorite.setOnClickListener(new View.OnClickListener() {
+            imvFavorite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (!mRealmHelper.getItemById(mItemModelList.get(getAdapterPosition()).getId()).isChecked()) {
                         mRealmHelper.isChecked(mItemModelList.get(getAdapterPosition()).getId(), true);
-                        btnFavorite.setImageResource(R.drawable.remove_selector);
+                        imvFavorite.setImageResource(R.drawable.remove_selector);
                         if (mRealmHelper.getItemById(mItemModelList.get(getAdapterPosition()).getId()).isClicked()) {
                             mRealmHelper.isClicked(mItemModelList.get(getAdapterPosition()).getId(), false);
                         }
                         EventBus.getDefault().post("add");
                     } else {
                         mRealmHelper.isChecked(mItemModelList.get(getAdapterPosition()).getId(), false);
-                        btnFavorite.setImageResource(R.drawable.button_selector);
+                        imvFavorite.setImageResource(R.drawable.button_selector);
                         EventBus.getDefault().post("remove");
 //                        notifyDataSetChanged();
                     }
@@ -188,13 +190,14 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> im
                 tvVie.setText(mItemModelList.get(position).getVietnam());
             } else {
                 if (mRealmHelper.getItemById(mItemModelList.get(position).getId()).isChecked()) {
-                    btnFavorite.setImageResource(R.drawable.remove_selector);
+                    imvFavorite.setImageResource(R.drawable.remove_selector);
                 } else {
-                    btnFavorite.setImageResource(R.drawable.button_selector);
+                    imvFavorite.setImageResource(R.drawable.button_selector);
                 }
-                btnFavorite.setVisibility(View.VISIBLE);
+                imvFavorite.setVisibility(View.VISIBLE);
                 tvEng.setText(mItemModelList.get(position).getVietnam());
                 tvVie.setText(mItemModelList.get(position).getEnglish());
+                imv.setImageResource(R.drawable.bullet_blue);
             }
 
             if (mRealmHelper.getItemById(mItemModelList.get(position).getId()).isClicked()) {

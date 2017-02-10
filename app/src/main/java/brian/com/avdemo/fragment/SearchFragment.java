@@ -69,9 +69,7 @@ public class SearchFragment extends BaseFragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-
-
-                itemAdapter.getFilter().filter(newText);
+                itemAdapter.getFilter().filter(Utils.convertString(newText));
 
                 mRecyclerView.setAdapter(itemAdapter);
                 itemAdapter.setOnItemClickListener(new ItemAdapter.OnItemClickListener() {
@@ -107,6 +105,7 @@ public class SearchFragment extends BaseFragment {
     @OnClick(R.id.btn_search)
     public void onClickClear() {
         txtSearch.setText("");
+        itemAdapter.getFilter().filter("");
     }
 
 }

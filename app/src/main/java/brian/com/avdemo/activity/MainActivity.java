@@ -24,6 +24,7 @@ import brian.com.avdemo.fragment.FavoriteFragment;
 import brian.com.avdemo.fragment.HomeFragment;
 import brian.com.avdemo.fragment.InfoFragment;
 import brian.com.avdemo.fragment.SearchFragment;
+import brian.com.avdemo.utils.Utils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        Utils.playSound(getBaseContext(),100);
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
             return;
@@ -111,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onPause() {
+        Utils.playSound(getBaseContext(),100);
         if (avBanner != null) {
             avBanner.pause();
         }

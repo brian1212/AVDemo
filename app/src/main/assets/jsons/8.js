@@ -3,7 +3,7 @@
 	{"id": 208,"cat_id": 8,"e": "This is such a surprise!", "v": "Thật là ngạc nhiên."},
 	{"id": 209,"cat_id": 8,"e": "Wow, I’m so happy!", "v": "Ôi, tôi thật hạnh phúc."},
 	{"id": 210,"cat_id": 8,"e": "Can you believe what our teacher did today?", "v": "Bạn có tin được những gì cô giáo đã làm hôm nay?"},
-	{"id": 221,"cat_id": 8,"e": "This comes as a surprise.", "v": "Nó xảy ra như một sự bất ngờ"},
+	{"id": 211,"cat_id": 8,"e": "This comes as a surprise.", "v": "Nó xảy ra như một sự bất ngờ"},
 	{"id": 212,"cat_id": 8,"e": "The best thing happened to me today.", "v": "Điều tốt nhất đến với tôi trong ngày."},
 	{"id": 213,"cat_id": 8,"e": "This is better than expected", "v": "Điều này tốt hơn so với dự kiến."},
 	{"id": 214,"cat_id": 8,"e": "How delightful", "v": "Thật thú vị"},
