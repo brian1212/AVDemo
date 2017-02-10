@@ -158,7 +158,8 @@ public class Utils {
                 }
             }
         } else {
-            if (newText.contains(search)) {
+            String reNewSearch = search.replace(",","").replace("?","").replace(".","").replace("!","").replace("'","");
+            if (newText.contains(reNewSearch)) {
                 return true;
             }
         }
